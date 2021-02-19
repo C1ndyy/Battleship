@@ -2,16 +2,19 @@ body{
     height: 100vh;
     display: grid;
     grid-template-columns: 2fr 1fr;
-    grid-template-rows: 1fr 4fr;
+    grid-template-rows: 1fr 2fr 1fr;
     grid-template-areas: 
         "hdr hdr"
-        "grid ships-container";
+        "grid ships-container"
+        "grid start-button";
 }
 
 
 header{
     grid-area: hdr;
     font-size: 10vh;
+    justify-self: center;
+    align-self: center;
 }
 
 #my-grid{
@@ -21,6 +24,7 @@ header{
     grid-template-columns: repeat(10, 50px);
     height: 500px;
     width: 500px;
+    justify-self: center;
     
 }
 
@@ -31,10 +35,22 @@ header{
     align-items: center;
 }
 
-#buttons-container>button{
-    grid-area: ships-container;
+#my-grid>div:hover{
+    background-color: cornflowerblue;
 }
 
+
+#buttons-container{
+    grid-area: start-button;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+#buttons-container>button{
+    height: 30%;
+    width: 80%;
+}
 
 
 #ships-container{
@@ -42,7 +58,7 @@ header{
 }
 
 #ships-container>div{
-    display: flex;
+    display: inline-block;;
     margin: 2px;
 }
 
@@ -98,3 +114,11 @@ header{
 #patrol2>div{
     background-color: rgb(248, 221, 130);
 }   
+
+.selected {
+    border: 5px solid black;
+}
+
+.horizantal {
+    transform: rotate(90deg);
+}

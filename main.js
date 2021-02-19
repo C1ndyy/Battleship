@@ -16,6 +16,8 @@ const ships=[
 const gridDiv=document.getElementById("my-grid");
 const shipContainer=document.getElementById("ships-container")
 
+let selectedShip=document.querySelector(".selected")
+
 //------------------------------Functions-----------------------------//
 //renders an empty 10x10 grid in the DOM
 function createEmptyGrid(){
@@ -43,6 +45,7 @@ function createShips(){
     ships.forEach(function(element){
         let divContainer = document.createElement("div");
         divContainer.id = element.name;
+        divContainer.classList.add("ship");
         shipContainer.appendChild(divContainer)
         for (let i=0; i<element.size; i++){
             let div = document.createElement("div");
@@ -52,7 +55,35 @@ function createShips(){
     })
 }
 
-
 createEmptyGrid();
 createShips();
-console.log(ships[2].size)
+
+
+//------------------------------Event Listeners-----------------------------//
+
+//Select Ship
+shipContainer.addEventListener("click", function(evt){
+    let allShips = document.querySelectorAll(".ship");
+    allShips.forEach(function(ship){
+        ship.classList.remove("selected")
+    })
+    let clickedShip = evt.target.parentElement
+    if (clickedShip.classList.contains("ship")){
+        clickedShip.classList.toggle("selected")
+    }
+})
+
+//flips orientation of selected ship
+document.addEventListener('keyup', function(e){
+    let clickedship = document.querySelector('.selected');
+    clickedship.classList.toggle("horizantal");
+});
+
+//Place ship on Grid
+// gridDiv.addEventListener("click", function(e){
+//     console.log(selectedShip.id)
+
+// })
+
+
+ 
