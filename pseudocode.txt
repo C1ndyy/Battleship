@@ -1,0 +1,95 @@
+variables:
+
+myGrid = [10x10 array] //0=empty 1=empty-clicked 2=ship-not clicked 3=ship-clicked
+enemyGrid = [10x10 array]
+myTurn = true
+shipsSizes = [5,4,3,3,2,2] <-- constant
+
+
+functions:
+
+createEmptyGrid()
+    1. loop through grid array and generate div element
+    2. assign each div element an "ID" of the index and set innerHTML to value of 0.
+
+
+render()
+    1. update css grid with grid variables 
+        - loop through myGrid
+             - 0=empty 1=empty-clicked 2=ship-not clicked 3=ship-clicked
+        - loop through enemyGrid
+            - same as above except 0 and 2 will render the same 
+    2. css grid will be linked to arrays using their id as the grid index
+
+
+init()
+    1. createEmptyGrid()
+    2. update myGrid with ship locations
+    3. generateShipLocations() for enemy grid
+    4. render()
+
+checkHit(array, x-cor, y-cor)
+    1. takes in 3 aruments, x and y coordinate of grid it is checking
+    2. checks the game state ararys if there is a ship in that location
+    3. returns true if its a hit, false if a miss
+
+checkWin()
+    1. loops through myGrid and enemyGrid
+    2. checks if any "2"s remain on the board
+        - if yes then game continues
+        - if not, then one side has won
+        
+AI-Part
+
+generateShipLocations()
+    2. create temp variable: shipOrientation=1  //will flip between vertical and horizantal
+    3. for each element in shipSizes array:
+        a. generate random x & y grid index 
+        b. call checkifFits(grid index, shipSizes[i], shipOrientation)
+            - if returns true changes grid cells values to 2
+            - if returns false, repeat from step a.
+        c. shipOrientation * -1 //flip orientation for next ship
+
+
+checkIfFits(grid index, length of ship)
+    1. if ship already in that index, return false
+    2. starting from that index (x,y), loop through next (size of ship) cells
+        - if all cells empty, return true, else return false 
+        - if ship orientation is 1 --> loop through x values
+        - if ship orientaiton is -1 --> loop through y values      
+
+launchAttack(){
+    Easy Mode
+        1. Generate array of coordinate pairs of all board ex. [[0,0], [0,1], [0,2] ....]
+        2. shuffle array
+        3. at each turn pop the last element and return it. 
+
+
+    Hard Mode   
+        let halfSunkShips = []
+        2. if halfSunkShips contains value
+            a. go to halfSunkShips index -> check neighboring cells and return those. 
+    
+
+
+
+Event Handler:
+    onclick event listener on entire grid. 
+    1. check if yourTurn = true
+    Your turn
+        a. on click of grid cell, pass through ID of cell 
+        b. checkHit()
+        c. updateGrid()-->update game state array
+        d. render()
+        e. checkWin()
+        f. set yourTurn = false
+        f. implement delay of 1 second after your turn before computer plays
+    Computer turn
+        a. launchAtttack()
+        b. checkHit()
+        c. updateGrid()-->update game state array
+        d. render()
+        e. checkwin()
+        f. set yourTurn = true
+
+

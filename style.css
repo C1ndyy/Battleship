@@ -1,0 +1,100 @@
+body{
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 4fr;
+    grid-template-areas: 
+        "hdr hdr"
+        "grid ships-container";
+}
+
+
+header{
+    grid-area: hdr;
+    font-size: 10vh;
+}
+
+#my-grid{
+    grid-area:grid;
+    display: grid;
+    grid-template-columns: repeat(10, 50px);
+    grid-template-columns: repeat(10, 50px);
+    height: 500px;
+    width: 500px;
+    
+}
+
+#my-grid>div{
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#buttons-container>button{
+    grid-area: ships-container;
+}
+
+
+
+#ships-container{
+    grid-area: ships-container;
+}
+
+#ships-container>div{
+    display: flex;
+    margin: 2px;
+}
+
+#ships-container>div>div{
+    height: 50px;
+    width: 50px;
+}
+
+#carrier{
+    flex-direction: row;
+}
+
+#carrier>div{
+    background-color: rgb(252, 186, 162);
+}   
+
+#battleship{
+    flex-direction: row;
+}
+
+#battleship>div{
+    background-color: rgb(130, 191, 248);
+}   
+
+#cruiser{
+    flex-direction: row;
+}
+
+#cruiser>div{
+    background-color: rgb(184, 241, 161);
+}   
+
+#submarine{
+    flex-direction: row;
+}
+
+#submarine>div{
+    background-color: rgb(200, 169, 236);
+} 
+
+#patrol1{
+    flex-direction: row;
+}
+
+#patrol1>div{
+    background-color: rgb(248, 221, 130);
+}   
+
+#patrol2{
+    flex-direction: row;
+}
+
+#patrol2>div{
+    background-color: rgb(248, 221, 130);
+}   
