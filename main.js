@@ -1,31 +1,33 @@
 //---------------------------State Variables-------------------------//
-let myGrid = createEmptyArray();
-let enemyGrid = createEmptyArray();
+let myArray = createEmptyArray();
+let compArray = createEmptyArray();
 const shipsSizes = [5,4,3,3,2,2];
 
 const ships=[
-    {name: "carrier", size: 5},
-    {name: "battleship", size: 4},
-    {name: "cruiser", size: 3},
-    {name: "submarine", size: 3},
-    {name: "patrol1", size: 2},
-    {name: "patrol2", size: 2}
+    {name: "carrier", size: 5, color: "rgb(252, 186, 162)"},
+    {name: "battleship", size: 4, color: "rgb(130, 191, 248)"},
+    {name: "cruiser", size: 3, color: "rgb(184, 241, 161)"},
+    {name: "submarine", size: 3, color: "rgb(200, 169, 236)"},
+    {name: "patrol1", size: 2, color: "rgb(248, 221, 130)"},
+    {name: "patrol2", size: 2, color: "rgb(248, 221, 130)"}
 ];
 
 //--------------------------cached variables--------------------------//
-const gridDiv=document.getElementById("my-grid");
-const shipContainer=document.getElementById("ships-container")
-
-let selectedShip=document.querySelector(".selected")
+const body=document.querySelector("body");
+const myGridDiv=document.getElementById("my-grid");
+const compGridDiv=document.getElementById("comp-grid");
+const shipContainer=document.getElementById("ships-container");
+let startButton=document.getElementById("start-button");
+let selectedShip=document.querySelector(".selected");
 
 //------------------------------Functions-----------------------------//
 //renders an empty 10x10 grid in the DOM
-function createEmptyGrid(){
+function createEmptyGrid(id, parentDivElement){
     for (let i=0; i<10; i++){
         for (let j=0; j<10; j++){
             let div = document.createElement("div");
-            div.id = `${i},${j}`;
-            gridDiv.appendChild(div)
+            div.id = `${id},${i},${j}`;
+            parentDivElement.appendChild(div)
         }
     }
 }
@@ -33,9 +35,12 @@ function createEmptyGrid(){
 //returns a 10x10 array of zeroes
 function createEmptyArray(){
     let arr=[]
-    let arrayOfTen = [0,0,0,0,0,0,0,0,0,0];
     for (let i=0; i<10; i++){
-        arr.push(arrayOfTen)    
+        row=[]
+        for (let j=0; j<10; j++){
+            row.push(0) 
+        }
+        arr.push(row)  
     }
     return arr;
 }    
@@ -55,21 +60,49 @@ function createShips(){
     })
 }
 
-createEmptyGrid();
+createEmptyGrid("myGrid", myGridDiv); //my DOM Grid
+
 createShips();
+
+render("myGrid")
+
+//render
+function render(grid){
+    for (let i=0; i<10; i++){
+        for (let j=0; j<10; j++){
+            //convert index of game state array to an ID - to target the ID of button being rendered
+            let cellID = `${grid},${i},${j}`;
+            if (myArray[i][j] === 0){
+                document.getElementById(cellID).innerHTML = ""; //empty
+            }
+            if (myArray[i][j] === 1){
+                document.getElementById(cellID).innerHTML = "⨉"; //miss
+            }
+            if (myArray[i][j] === 2){
+                document.getElementById(cellID).innerHTML = "▢"; //ship-intact
+            }
+            if (myArray[i][j] === 3){
+                document.getElementById(cellID).innerHTML = "☒"; //ship-hit
+            }
+        }
+    }
+}
 
 
 //------------------------------Event Listeners-----------------------------//
 
 //Select Ship
 shipContainer.addEventListener("click", function(evt){
-    let allShips = document.querySelectorAll(".ship");
-    allShips.forEach(function(ship){
-        ship.classList.remove("selected")
-    })
     let clickedShip = evt.target.parentElement
-    if (clickedShip.classList.contains("ship")){
-        clickedShip.classList.toggle("selected")
+    if (clickedShip.classList.contains("selected")) clickedShip.classList.toggle("selected");
+    else {
+        let allShips = document.querySelectorAll(".ship");
+        allShips.forEach(function(ship){
+            ship.classList.remove("selected");
+        })
+        if (clickedShip.classList.contains("ship")){
+            clickedShip.classList.toggle("selected");
+        }
     }
 })
 
@@ -80,10 +113,19 @@ document.addEventListener('keyup', function(e){
 });
 
 //Place ship on Grid
-// gridDiv.addEventListener("click", function(e){
+// myGridDiv.addEventListener("click", function(e){
 //     console.log(selectedShip.id)
 
 // })
 
-
+//Clears Starting Page
+startButton.addEventListener("click", function(e){
+    shipContainer.style.display="none";
+    startButton.style.display="none";
+    createEmptyGrid("compGrid", compGridDiv) //comp DOM Grid
+    compGridDiv.style.display="grid"
+    body.classList.remove("page-1-layout")
+    body.classList.add("page-2-layout")
+}
+)
  

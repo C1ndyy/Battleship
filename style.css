@@ -1,13 +1,30 @@
-body{
+.hidden {
+    display:none;
+}
+
+
+.page-1-layout{
     height: 100vh;
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    grid-template-rows: 1fr 2fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 2fr;
+    grid-template-areas: 
+        "hdr start-button"
+        "my-grid ships-container";
+}
+
+.page-2-layout{
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 2fr ;
     grid-template-areas: 
         "hdr hdr"
-        "grid ships-container"
-        "grid start-button";
+        "my-grid comp-grid";
 }
+
+
+
 
 
 header{
@@ -17,8 +34,9 @@ header{
     align-self: center;
 }
 
+/* -----------My Grid-------------*/
 #my-grid{
-    grid-area:grid;
+    grid-area:my-grid;
     display: grid;
     grid-template-columns: repeat(10, 50px);
     grid-template-columns: repeat(10, 50px);
@@ -39,6 +57,28 @@ header{
     background-color: cornflowerblue;
 }
 
+/* -----------Comp Grid-------------*/
+#comp-grid{
+    grid-area:comp-grid;
+    display: none;
+    grid-template-columns: repeat(10, 50px);
+    grid-template-columns: repeat(10, 50px);
+    height: 500px;
+    width: 500px;
+    justify-self: center;
+    
+}
+
+#comp-grid>div{
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#comp-grid>div:hover{
+    background-color: cornflowerblue;
+}
 
 #buttons-container{
     grid-area: start-button;
@@ -59,9 +99,9 @@ header{
 
 #ships-container>div{
     display: inline-block;;
-    margin: 2px;
+    margin: 2px 50px;
 }
-
+ 
 #ships-container>div>div{
     height: 50px;
     width: 50px;
