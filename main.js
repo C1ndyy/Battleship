@@ -1,7 +1,7 @@
 //---------------------------State Variables-------------------------//
 let myArray = createEmptyArray();
 let compArray = createEmptyArray();
-const shipsSizes = [5,4,3,3,2,2];
+// const shipsSizes = [5,4,3,3,2,2];
 
 const ships=[
     {name: "carrier", size: 5, color: "rgb(252, 186, 162)"},
@@ -45,7 +45,7 @@ function createEmptyArray(){
     return arr;
 }    
 
-//renders ships in DOM
+//renders ships in DOM for user placement on grid on starting page
 function createShips(){
     ships.forEach(function(element){
         let divContainer = document.createElement("div");
@@ -60,29 +60,85 @@ function createShips(){
     })
 }
 
-createEmptyGrid("myGrid", myGridDiv); //my DOM Grid
+//generate random ship locations
+function generateShipLocations(){
+    //TODO
+}
 
+//check hit - returns true or false - does not work on already clicked cells
+function checkHit(array,x,y){
+    //if empty (0) update game state array to miss (1)
+    if (array[x][y] === 0){
+        array[x][y] = 1
+        return false
+    }
+    //if cell has ship (2) update game state array to hit (3)
+    else if (array[x][y] === 2){
+        array[x][y] = 3
+        return true
+    }
+}
+
+//check win - returns true if no hidden ships remain in array
+function checkWin(array){
+    for (let i = 0; i < 10; i++){
+        for (let j = 0; j < 10; j++){
+            if (array[i][j] === 2) return false;
+        }
+
+    }
+    return true;
+}
+
+
+
+
+
+createEmptyGrid("myGrid", myGridDiv); //my DOM Grid
+createEmptyGrid("compGrid", compGridDiv) //comp DOM Grid
 createShips();
 
-render("myGrid")
+//TESTING STUFF- DELETE LATER
+// compArray[1][1] = 2
+// compArray[2][2] = 3
+// myArray[1][1] = 2
+// let HitorMiss= checkHit(compArray,5,1)
+// console.log(compArray)
+// console.log(HitorMiss)
+// console.log(checkWin(compArray))
+// render()
 
 //render
-function render(grid){
+function render(){
     for (let i=0; i<10; i++){
         for (let j=0; j<10; j++){
             //convert index of game state array to an ID - to target the ID of button being rendered
-            let cellID = `${grid},${i},${j}`;
+            let cellID = `${i},${j}`;
+            //render of player grid
             if (myArray[i][j] === 0){
-                document.getElementById(cellID).innerHTML = ""; //empty
+                document.getElementById(`myGrid,${cellID}`).innerHTML = ""; //empty
             }
             if (myArray[i][j] === 1){
-                document.getElementById(cellID).innerHTML = "⨉"; //miss
+                document.getElementById(`myGrid,${cellID}`).innerHTML = "⨉"; //miss
             }
             if (myArray[i][j] === 2){
-                document.getElementById(cellID).innerHTML = "▢"; //ship-intact
+                document.getElementById(`myGrid,${cellID}`).innerHTML = "▢"; //ship-intact
             }
             if (myArray[i][j] === 3){
-                document.getElementById(cellID).innerHTML = "☒"; //ship-hit
+                document.getElementById(`myGrid,${cellID}`).innerHTML = "☒"; //ship-hit
+            }
+            //render of computer grid
+            if (compArray[i][j] === 0){
+                document.getElementById(`compGrid,${cellID}`).innerHTML = ""; //empty
+            }
+            if (compArray[i][j] === 1){
+                document.getElementById(`compGrid,${cellID}`).innerHTML = "⨉"; //miss
+            }           
+            if (compArray[i][j] === 2){
+                document.getElementById(`compGrid,${cellID}`).innerHTML = ""; //ship-intact-hidden
+            }
+            if (compArray[i][j] === 3){
+                document.getElementById(`compGrid,${cellID}`).innerHTML = "☒"; //ship-hit
             }
         }
     }
@@ -122,7 +178,6 @@ document.addEventListener('keyup', function(e){
 startButton.addEventListener("click", function(e){
     shipContainer.style.display="none";
     startButton.style.display="none";
-    createEmptyGrid("compGrid", compGridDiv) //comp DOM Grid
     compGridDiv.style.display="grid"
     body.classList.remove("page-1-layout")
     body.classList.add("page-2-layout")
