@@ -1,6 +1,7 @@
 //---------------------------State Variables-------------------------//
 let myArray = createEmptyArray();
 let compArray = createEmptyArray();
+let myTurn = true;
 // const shipsSizes = [5,4,3,3,2,2];
 
 const ships=[
@@ -62,7 +63,7 @@ function createShips(){
 
 //generate random ship locations
 function generateRandomShipLocations(){
-    let axis = 1;                                       // 1 = vertical, -1 = horizantal
+    let axis = 1;   // 1 = vertical, -1 = horizantal
     ships.forEach(function(ship){
         let shipPlaced = false;
         while (shipPlaced == false){
@@ -78,6 +79,7 @@ function generateRandomShipLocations(){
     })
 }
 
+//generateRandomShipLocations will use this function to check if generating ship in this location will conflict with existing ships or extend past board
 function checkFit(x,y,shipLength,axis){
     //for vertical ship
     if (axis === 1){
@@ -96,6 +98,7 @@ function checkFit(x,y,shipLength,axis){
     return true;
 }
 
+//after confirming fit, generateRandomShipLocations will use this function to update game state array
 function placeShip(x,y,shipLength,axis){
     if (axis === 1){
         for(i=0; i<shipLength; i++){
@@ -131,15 +134,13 @@ function checkWin(array){
         }
 
     }
+    alert("GAME OVER")
     return true;
 }
 
 
-
-
-
-createEmptyGrid("myGrid", myGridDiv); //my DOM Grid
-createEmptyGrid("compGrid", compGridDiv) //comp DOM Grid
+createEmptyGrid("myArray", myGridDiv); //my DOM Grid
+createEmptyGrid("compArray", compGridDiv) //comp DOM Grid
 createShips();
 
 //TESTING STUFF- DELETE LATER
@@ -160,29 +161,29 @@ function render(){
             let cellID = `${i},${j}`;
             //render of player grid
             if (myArray[i][j] === 0){
-                document.getElementById(`myGrid,${cellID}`).innerHTML = ""; //empty
+                document.getElementById(`myArray,${cellID}`).innerHTML = ""; //empty
             }
             if (myArray[i][j] === 1){
-                document.getElementById(`myGrid,${cellID}`).innerHTML = "⨉"; //miss
+                document.getElementById(`myArray,${cellID}`).innerHTML = "⨉"; //miss
             }
             if (myArray[i][j] === 2){
-                document.getElementById(`myGrid,${cellID}`).innerHTML = "▢"; //ship-intact
+                document.getElementById(`myArray,${cellID}`).innerHTML = "▢"; //ship-intact
             }
             if (myArray[i][j] === 3){
-                document.getElementById(`myGrid,${cellID}`).innerHTML = "☒"; //ship-hit
+                document.getElementById(`myArray,${cellID}`).innerHTML = "☒"; //ship-hit
             }
             //render of computer grid
             if (compArray[i][j] === 0){
-                document.getElementById(`compGrid,${cellID}`).innerHTML = ""; //empty
+                document.getElementById(`compArray,${cellID}`).innerHTML = ""; //empty
             }
             if (compArray[i][j] === 1){
-                document.getElementById(`compGrid,${cellID}`).innerHTML = "⨉"; //miss
+                document.getElementById(`compArray,${cellID}`).innerHTML = "⨉"; //miss
             }           
             if (compArray[i][j] === 2){
-                document.getElementById(`compGrid,${cellID}`).innerHTML = ""; //ship-intact-hidden
+                document.getElementById(`compArray,${cellID}`).innerHTML = ""; //ship-intact-hidden
             }
             if (compArray[i][j] === 3){
-                document.getElementById(`compGrid,${cellID}`).innerHTML = "☒"; //ship-hit
+                document.getElementById(`compArray,${cellID}`).innerHTML = "☒"; //ship-hit
             }
         }
     }
@@ -228,4 +229,19 @@ startButton.addEventListener("click", function(e){
     generateRandomShipLocations()
 }
 )
- 
+
+compGridDiv.addEventListener("click", function(e){
+
+    let clickedCell = e.target.id.split(",");
+    checkHit(compArray, Number(clickedCell[1]), Number(clickedCell[2]))
+    render()
+    checkWin(compArray)
+    //let myTurn = false
+
+    
+    //AI attack - TODO
+    //checkHit(myArray, x,y)
+    //render()
+    //checkWin(myArray)
+    //let myTurn = true
+})
