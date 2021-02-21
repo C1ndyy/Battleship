@@ -27,20 +27,20 @@ function createEmptyGrid(id, parentDivElement){
         for (let j=0; j<10; j++){
             let div = document.createElement("div");
             div.id = `${id},${i},${j}`;
-            parentDivElement.appendChild(div)
+            parentDivElement.appendChild(div);
         }
     }
 }
 
 //returns a 10x10 array of zeroes
 function createEmptyArray(){
-    let arr=[]
+    let arr=[];
     for (let i=0; i<10; i++){
-        row=[]
+        row=[];
         for (let j=0; j<10; j++){
-            row.push(0) 
+            row.push(0); 
         }
-        arr.push(row)  
+        arr.push(row);  
     }
     return arr;
 }    
@@ -61,21 +61,65 @@ function createShips(){
 }
 
 //generate random ship locations
-function generateShipLocations(){
-    //TODO
+function generateRandomShipLocations(){
+    let axis = 1;                                       // 1 = vertical, -1 = horizantal
+    ships.forEach(function(ship){
+        let shipPlaced = false;
+        while (shipPlaced == false){
+            let x = Math.floor(Math.random() * 10);
+            let y = Math.floor(Math.random() * 10);
+            if (checkFit(x,y,ship.size,axis) == true){
+                // console.log(x,y,ship.size,axis)
+                placeShip(x,y,ship.size,axis);
+                shipPlaced = true;
+                axis *= -1;
+            }
+        }    
+    })
 }
 
-//check hit - returns true or false - does not work on already clicked cells
+function checkFit(x,y,shipLength,axis){
+    //for vertical ship
+    if (axis === 1){
+        for(i=0; i<shipLength; i++){
+            if (x+i > 9) return false;
+            if (compArray[x+i][y] != 0) return false;
+        }
+    }
+    //for horizantal ships    
+    if (axis === -1){
+        for(i=0; i<shipLength; i++){
+            if (y+i > 9) return false;
+            if (compArray[x][y+i] != 0) return false;
+        }
+    }
+    return true;
+}
+
+function placeShip(x,y,shipLength,axis){
+    if (axis === 1){
+        for(i=0; i<shipLength; i++){
+            compArray[x+i][y] = 2
+        }
+    }    
+    if (axis === -1){
+        for(i=0; i<shipLength; i++){
+            compArray[x][y+i] = 2
+        }
+    }
+}
+
+//check hit - updates game state array and returns true or false - does not work on already clicked cells
 function checkHit(array,x,y){
     //if empty (0) update game state array to miss (1)
     if (array[x][y] === 0){
-        array[x][y] = 1
-        return false
+        array[x][y] = 1;
+        return false;
     }
     //if cell has ship (2) update game state array to hit (3)
     else if (array[x][y] === 2){
-        array[x][y] = 3
-        return true
+        array[x][y] = 3;
+        return true;
     }
 }
 
@@ -103,7 +147,7 @@ createShips();
 // compArray[2][2] = 3
 // myArray[1][1] = 2
 // let HitorMiss= checkHit(compArray,5,1)
-// console.log(compArray)
+console.log(compArray)
 // console.log(HitorMiss)
 // console.log(checkWin(compArray))
 // render()
@@ -162,7 +206,7 @@ shipContainer.addEventListener("click", function(evt){
     }
 })
 
-//flips orientation of selected ship
+//flips axis of selected ship
 document.addEventListener('keyup', function(e){
     let clickedship = document.querySelector('.selected');
     clickedship.classList.toggle("horizantal");
@@ -181,6 +225,7 @@ startButton.addEventListener("click", function(e){
     compGridDiv.style.display="grid"
     body.classList.remove("page-1-layout")
     body.classList.add("page-2-layout")
+    generateRandomShipLocations()
 }
 )
  
