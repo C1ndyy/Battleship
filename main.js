@@ -13,6 +13,8 @@ const ships=[
     {name: "patrol2", size: 2, color: "rgb(248, 221, 130)"}
 ];
 
+const gridColor="white"
+
 //--------------------------cached variables--------------------------//
 const body=document.querySelector("body");
 const myGridDiv=document.getElementById("my-grid");
@@ -61,6 +63,11 @@ function createShips(){
     })
 }
 
+function highlightGridCells(){
+
+}
+
+
 //generate random ship locations
 function generateRandomShipLocations(){
     let axis = 1;   // 1 = vertical, -1 = horizantal
@@ -69,9 +76,9 @@ function generateRandomShipLocations(){
         while (shipPlaced == false){
             let x = Math.floor(Math.random() * 10);
             let y = Math.floor(Math.random() * 10);
-            if (checkFit(x,y,ship.size,axis) == true){
+            if (checkFit(compArray,x,y,ship.size,axis) == true){
                 // console.log(x,y,ship.size,axis)
-                placeShip(x,y,ship.size,axis);
+                placeShip(compArray,x,y,ship.size,axis);
                 shipPlaced = true;
                 axis *= -1;
             }
@@ -80,34 +87,36 @@ function generateRandomShipLocations(){
 }
 
 //generateRandomShipLocations will use this function to check if generating ship in this location will conflict with existing ships or extend past board
-function checkFit(x,y,shipLength,axis){
+function checkFit(array,x,y,shipLength,axis){
+    console.log(array,x,y,shipLength,axis)
     //for vertical ship
     if (axis === 1){
         for(i=0; i<shipLength; i++){
             if (x+i > 9) return false;
-            if (compArray[x+i][y] != 0) return false;
+            if (array[x+i][y] != 0) return false;
+            
         }
     }
     //for horizantal ships    
     if (axis === -1){
         for(i=0; i<shipLength; i++){
             if (y+i > 9) return false;
-            if (compArray[x][y+i] != 0) return false;
+            if (array[x][y+i] != 0) return false;
         }
     }
     return true;
 }
 
 //after confirming fit, generateRandomShipLocations will use this function to update game state array
-function placeShip(x,y,shipLength,axis){
+function placeShip(array,x,y,shipLength,axis){
     if (axis === 1){
         for(i=0; i<shipLength; i++){
-            compArray[x+i][y] = 2
+            array[x+i][y] = 2
         }
     }    
     if (axis === -1){
         for(i=0; i<shipLength; i++){
-            compArray[x][y+i] = 2
+            array[x][y+i] = 2
         }
     }
 }
@@ -205,16 +214,16 @@ function render(){
 }
 
 //TESTING STUFF- REMOVE LATER
-myArray[0][0]=2
-myArray[0][1]=2
-myArray[0][2]=2
-myArray[0][3]=2
-myArray[0][4]=2
-myArray[0][5]=2
-myArray[0][6]=2
-myArray[0][7]=2
-myArray[0][8]=2
-myArray[0][9]=2
+// myArray[0][0]=2
+// myArray[0][1]=2
+// myArray[0][2]=2
+// myArray[0][3]=2
+// myArray[0][4]=2
+// myArray[0][5]=2
+// myArray[0][6]=2
+// myArray[0][7]=2
+// myArray[0][8]=2
+// myArray[0][9]=2
 
 
 
@@ -241,11 +250,94 @@ document.addEventListener('keyup', function(e){
     clickedship.classList.toggle("horizantal");
 });
 
-//Place ship on Grid
-// myGridDiv.addEventListener("click", function(e){
-//     console.log(selectedShip.id)
+//Hover over to see ship placement location
+myGridDiv.addEventListener("mouseover", function(e){
+    let hoveredCell = e.target
+    let hoveredCellID = hoveredCell.id.split(",");
+    console.log(hoveredCellID)
+    let x = Number(hoveredCellID[1])
+    let y = Number(hoveredCellID[2])
+    // console.log(x,y)
+    let clickedShip = document.querySelector('.selected');
+    let shipSize = 0;
+    let shipColor= gridColor;
+    let axis = 1;
+    ships.forEach(function(ship){
+        if (ship.name == clickedShip.id){
+            shipSize = ship.size;
+            shipColor = ship.color;
+        }
+    })
+    if (clickedShip.classList.contains("horizantal")) axis = -1;
+    if(checkFit(myArray,x,y,shipSize,axis)){
+        hoveredCell.style.backgroundColor = shipColor
+        //vertical
+        if (axis === 1){
+            for (i=0; i<shipSize; i++) {
+                let id = `myArray,${x+i},${y}`
+                let adjacentcell= document.getElementById(id)
+                adjacentcell.style.backgroundColor = shipColor
+            }
+        }
+        else if (axis === -1){
+            for (i=0; i<shipSize; i++) {
+                let id = `myArray,${x},${y+i}`
+                let adjacentcell= document.getElementById(id)
+                adjacentcell.style.backgroundColor = shipColor
+            }
+        } 
+    }
+})
 
-// })
+//clears grid as mouse hovers away
+myGridDiv.addEventListener("mouseout", function(e){
+    let hoveredCell = e.target
+    let hoveredCellID = hoveredCell.id.split(",");
+    let x = Number(hoveredCellID[1])
+    let y = Number(hoveredCellID[2])
+    let clickedShip = document.querySelector('.selected');
+    let shipSize = 0;
+    let axis = 1;
+    ships.forEach(function(ship){
+        if (ship.name == clickedShip.id) shipSize = ship.size;
+    })
+    e.target.style.backgroundColor=""
+    if (clickedShip.classList.contains("horizantal")) axis = -1;
+    //vertical
+    if (axis === 1){
+        for (i=0; i<shipSize; i++) {
+            let id = `myArray,${x+i},${y}`
+            let adjacentcell= document.getElementById(id)
+            adjacentcell.style.backgroundColor = ""
+        }
+    }
+    else if (axis === -1){
+        for (i=0; i<shipSize; i++) {
+            let id = `myArray,${x},${y+i}`
+            let adjacentcell= document.getElementById(id)
+            adjacentcell.style.backgroundColor = ""
+        }
+
+    } 
+})
+
+//Place ship
+myGridDiv.addEventListener("click", function(e){
+    let clickedCell = e.target
+    let clickedCellID = clickedCell.id.split(",");
+    let x = Number(clickedCellID[1])
+    let y = Number(clickedCellID[2])
+    let clickedShip = document.querySelector('.selected');
+    let axis = 1;
+    if (clickedShip.classList.contains("horizantal")) axis = -1;
+    let shipSize = 0;
+    ships.forEach(function(ship){
+        if (ship.name == clickedShip.id)shipSize = ship.size;
+    })
+    placeShip(myArray,x,y,shipSize,axis)
+    render()
+    console.log(myArray)
+})
 
 //Clears Starting Page
 startButton.addEventListener("click", function(e){
@@ -255,9 +347,11 @@ startButton.addEventListener("click", function(e){
     body.classList.remove("page-1-layout")
     body.classList.add("page-2-layout")
     generateRandomShipLocations()
+    render()
 }
 )
 
+//Game flow logic
 compGridDiv.addEventListener("click", function(e){
 
     let clickedCell = e.target.id.split(",");

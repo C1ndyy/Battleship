@@ -54,7 +54,7 @@ header{
 }
 
 #my-grid>div:hover{
-    background-color: cornflowerblue;
+    background-color: rgb(235, 93, 93);
 }
 
 /* -----------Comp Grid-------------*/
