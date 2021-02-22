@@ -2,7 +2,7 @@
 let myArray = createEmptyArray();
 let compArray = createEmptyArray();
 let myTurn = true;
-// const shipsSizes = [5,4,3,3,2,2];
+let AIGuessesLeft = generateGuessesArray()
 
 const ships=[
     {name: "carrier", size: 5, color: "rgb(252, 186, 162)"},
@@ -138,20 +138,35 @@ function checkWin(array){
     return true;
 }
 
+//AI launch attach--> TODO: Hard Mode
+function generateAIGuess(){
+    // console.log(AIGuessesLeft)
+    return AIGuessesLeft.pop()
+}
+
+//creates a shuffled array of all possible guesses
+function generateGuessesArray(){
+    let arr=[]
+    for (let i=0; i<10; i++){
+        for (let j=0; j<10; j++){
+            arr.push([i,j])
+        }
+    }
+    //Fisher-Yates shuffle algorithm below taken from 'The Art of Computer Programming' by Donald E. Knuth
+    for (let i=arr.length-1; i>0; i--){
+      let j= Math.floor(Math.random() * i)
+      let temp = arr[i]
+      arr[i] = arr[j]
+      arr[j] = temp
+    }
+    return arr;
+}
 
 createEmptyGrid("myArray", myGridDiv); //my DOM Grid
 createEmptyGrid("compArray", compGridDiv) //comp DOM Grid
 createShips();
 
-//TESTING STUFF- DELETE LATER
-// compArray[1][1] = 2
-// compArray[2][2] = 3
-// myArray[1][1] = 2
-// let HitorMiss= checkHit(compArray,5,1)
 console.log(compArray)
-// console.log(HitorMiss)
-// console.log(checkWin(compArray))
-// render()
 
 //render
 function render(){
@@ -188,6 +203,19 @@ function render(){
         }
     }
 }
+
+//TESTING STUFF- REMOVE LATER
+myArray[0][0]=2
+myArray[0][1]=2
+myArray[0][2]=2
+myArray[0][3]=2
+myArray[0][4]=2
+myArray[0][5]=2
+myArray[0][6]=2
+myArray[0][7]=2
+myArray[0][8]=2
+myArray[0][9]=2
+
 
 
 //------------------------------Event Listeners-----------------------------//
@@ -236,12 +264,12 @@ compGridDiv.addEventListener("click", function(e){
     checkHit(compArray, Number(clickedCell[1]), Number(clickedCell[2]))
     render()
     checkWin(compArray)
-    //let myTurn = false
+    myTurn = false
 
-    
-    //AI attack - TODO
-    //checkHit(myArray, x,y)
-    //render()
-    //checkWin(myArray)
-    //let myTurn = true
+
+    let AIGuess = generateAIGuess()
+    checkHit(myArray, AIGuess[0], AIGuess[1])
+    render()
+    checkWin(myArray)
+    myTurn = true
 })
