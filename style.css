@@ -1,5 +1,5 @@
 .hidden {
-    display:none;
+    display: none;
 }
 
 
@@ -9,7 +9,7 @@
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 2fr;
     grid-template-areas: 
-        "hdr start-button"
+        "hdr hdr"
         "my-grid ships-container";
 }
 
@@ -81,15 +81,19 @@ header{
 }
 
 #buttons-container{
-    grid-area: start-button;
+    grid-area: ships-container;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
 }
 
 #buttons-container>button{
-    height: 30%;
-    width: 80%;
+    height: 10%;
+    width: 50%;
+    display:none;
+    font-size: 30px;
+    justify-content: center;
+    align-items: center;
 }
 
 

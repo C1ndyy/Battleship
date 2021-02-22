@@ -63,9 +63,10 @@ function createShips(){
     })
 }
 
-function highlightGridCells(){
+//TODO
+// function highlightGridCells(){
 
-}
+// }
 
 
 //generate random ship locations
@@ -88,13 +89,11 @@ function generateRandomShipLocations(){
 
 //generateRandomShipLocations will use this function to check if generating ship in this location will conflict with existing ships or extend past board
 function checkFit(array,x,y,shipLength,axis){
-    console.log(array,x,y,shipLength,axis)
     //for vertical ship
     if (axis === 1){
         for(i=0; i<shipLength; i++){
             if (x+i > 9) return false;
             if (array[x+i][y] != 0) return false;
-            
         }
     }
     //for horizantal ships    
@@ -119,6 +118,18 @@ function placeShip(array,x,y,shipLength,axis){
             array[x][y+i] = 2
         }
     }
+}
+
+function allShipsPlaced(){
+    let allShips = document.querySelectorAll(".ship.hidden");
+    if (allShips.length == ships.length) return true;
+    else return false;
+}
+
+//checks if cell has already been clicked - returns true if cell has not been already guessed
+function validClick(x,y){
+    if (compArray[x][y] == 0 || compArray[x][y] == 2) return true;
+    else return false 
 }
 
 //check hit - updates game state array and returns true or false - does not work on already clicked cells
@@ -213,19 +224,6 @@ function render(){
     }
 }
 
-//TESTING STUFF- REMOVE LATER
-// myArray[0][0]=2
-// myArray[0][1]=2
-// myArray[0][2]=2
-// myArray[0][3]=2
-// myArray[0][4]=2
-// myArray[0][5]=2
-// myArray[0][6]=2
-// myArray[0][7]=2
-// myArray[0][8]=2
-// myArray[0][9]=2
-
-
 
 //------------------------------Event Listeners-----------------------------//
 
@@ -254,7 +252,7 @@ document.addEventListener('keyup', function(e){
 myGridDiv.addEventListener("mouseover", function(e){
     let hoveredCell = e.target
     let hoveredCellID = hoveredCell.id.split(",");
-    console.log(hoveredCellID)
+    // console.log(hoveredCellID)
     let x = Number(hoveredCellID[1])
     let y = Number(hoveredCellID[2])
     // console.log(x,y)
@@ -334,14 +332,24 @@ myGridDiv.addEventListener("click", function(e){
     ships.forEach(function(ship){
         if (ship.name == clickedShip.id)shipSize = ship.size;
     })
-    placeShip(myArray,x,y,shipSize,axis)
-    render()
-    console.log(myArray)
+    if(checkFit(myArray,x,y,shipSize,axis)){
+        placeShip(myArray,x,y,shipSize,axis)
+        //removes ship from ship-container once placed on board
+        clickedShip.style.display = "none"
+        clickedShip.classList.add("hidden")
+        clickedShip.classList.remove("selected")
+        
+        if (allShipsPlaced()){
+            shipContainer.style.display = "none"
+            startButton.style.display = "flex"
+        }
+        render()
+    }
 })
 
 //Clears Starting Page
 startButton.addEventListener("click", function(e){
-    shipContainer.style.display="none";
+    // shipContainer.style.display="none";
     startButton.style.display="none";
     compGridDiv.style.display="grid"
     body.classList.remove("page-1-layout")
@@ -353,17 +361,26 @@ startButton.addEventListener("click", function(e){
 
 //Game flow logic
 compGridDiv.addEventListener("click", function(e){
+    console.log(compArray)
+    if (myTurn == true) {
+        let clickedCell = e.target.id.split(",");
+        let x=Number(clickedCell[1]);
+        let y=Number(clickedCell[2]);
+        if (validClick(x,y)){
+            checkHit(compArray,x,y);
+            render();
+            checkWin(compArray)
+            myTurn = false;
 
-    let clickedCell = e.target.id.split(",");
-    checkHit(compArray, Number(clickedCell[1]), Number(clickedCell[2]))
-    render()
-    checkWin(compArray)
-    myTurn = false
+            setTimeout(function(){
+                let AIGuess = generateAIGuess()
+                checkHit(myArray, AIGuess[0], AIGuess[1])
+                render()
+                checkWin(myArray)
+                myTurn = true
+            }, 1000);
+        }
+        }
 
 
-    let AIGuess = generateAIGuess()
-    checkHit(myArray, AIGuess[0], AIGuess[1])
-    render()
-    checkWin(myArray)
-    myTurn = true
 })
