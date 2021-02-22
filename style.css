@@ -17,9 +17,10 @@
     height: 100vh;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 2fr ;
+    grid-template-rows: 1fr 60px 2fr ;
     grid-template-areas: 
         "hdr hdr"
+        "comp-turn my-turn"
         "my-grid comp-grid";
 }
 
@@ -33,6 +34,45 @@ header{
     justify-self: center;
     align-self: center;
 }
+
+/* -----------Turn Indicators-------------*/
+#comp-turn {
+    grid-area: comp-turn;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#my-turn {
+    grid-area: my-turn;
+    display:none;
+    justify-content: center;
+    align-items: center;
+}
+
+p {
+    display: inline-block;
+    padding: 6px;
+    font-size: 20px;
+    border-radius: 6px;
+    margin: 20px;
+}
+
+.turn-indicator-on {
+    font-weight: bold;
+    color: rgb(101, 214, 101);
+    background-color: rgb(225, 241, 200);
+    border: 2px solid rgb(101, 214, 101);
+
+}
+
+.turn-indicator-off {
+    color: rgb(204, 204, 204);
+    background-color: rgb(228, 228, 228);
+    border: 2px solid rgb(204, 204, 204);
+}
+
 
 /* -----------My Grid-------------*/
 #my-grid{

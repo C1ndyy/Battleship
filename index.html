@@ -11,6 +11,12 @@
 </head>
 <body class=page-1-layout>
     <header>Battleship</header>
+    <div id=comp-turn>
+        <p class='turn-indicator-off'>Computer Turn</p>
+    </div>
+    <div id=my-turn>
+        <p class="turn-indicator-on">Your Turn</p>
+    </div>
     <div id="my-grid"></div>
     <div id="comp-grid"></div>
     <div id="ships-container">
@@ -20,5 +26,7 @@
     <div id="buttons-container">
         <button type="button" id='start-button'>Start Game</button>
     </div>
+
+    <!-- <button type="button" onclick="window.location.reload()">Play Again</button> -->
 </body>
 </html>

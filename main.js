@@ -22,6 +22,10 @@ const compGridDiv=document.getElementById("comp-grid");
 const shipContainer=document.getElementById("ships-container");
 let startButton=document.getElementById("start-button");
 let selectedShip=document.querySelector(".selected");
+const compTurnIndicatorDiv = document.getElementById("comp-turn");
+const playerTurnIndicatorDiv = document.getElementById("my-turn");
+const compTurnIndicator = document.querySelector("#comp-turn>p");
+const playerTurnIndicator = document.querySelector("#my-turn>p");
 
 //------------------------------Functions-----------------------------//
 //renders an empty 10x10 grid in the DOM
@@ -224,6 +228,19 @@ function render(){
     }
 }
 
+function myTurnIndicatorOn(){
+    playerTurnIndicator.classList.add("turn-indicator-on")
+    playerTurnIndicator.classList.remove("turn-indicator-off")
+    compTurnIndicator.classList.add("turn-indicator-off")
+    compTurnIndicator.classList.remove("turn-indicator-on")
+}
+
+function myTurnIndicatorOff(){
+    compTurnIndicator.classList.add("turn-indicator-on")
+    compTurnIndicator.classList.remove("turn-indicator-off")
+    playerTurnIndicator.classList.add("turn-indicator-off")
+    playerTurnIndicator.classList.remove("turn-indicator-on")
+}
 
 //------------------------------Event Listeners-----------------------------//
 
@@ -349,11 +366,12 @@ myGridDiv.addEventListener("click", function(e){
 
 //Clears Starting Page
 startButton.addEventListener("click", function(e){
-    // shipContainer.style.display="none";
     startButton.style.display="none";
-    compGridDiv.style.display="grid"
-    body.classList.remove("page-1-layout")
-    body.classList.add("page-2-layout")
+    compGridDiv.style.display="grid";
+    body.classList.remove("page-1-layout");
+    body.classList.add("page-2-layout");
+    compTurnIndicatorDiv.style.display = "flex";
+    playerTurnIndicatorDiv.style.display = "flex";
     generateRandomShipLocations()
     render()
 }
@@ -371,16 +389,21 @@ compGridDiv.addEventListener("click", function(e){
             render();
             checkWin(compArray)
             myTurn = false;
+            myTurnIndicatorOff()
 
             setTimeout(function(){
                 let AIGuess = generateAIGuess()
                 checkHit(myArray, AIGuess[0], AIGuess[1])
                 render()
                 checkWin(myArray)
-                myTurn = true
-            }, 1000);
-        }
-        }
 
+                setTimeout(function(){
+                    myTurn = true
+                    myTurnIndicatorOn()
+                },500)
 
+            }, 500);
+        }
+    }
 })
+
