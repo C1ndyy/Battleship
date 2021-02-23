@@ -27,7 +27,7 @@ const compTurnIndicatorDiv = document.getElementById("comp-turn");
 const playerTurnIndicatorDiv = document.getElementById("my-turn");
 const compTurnIndicator = document.querySelector("#comp-turn>p");
 const playerTurnIndicator = document.querySelector("#my-turn>p");
-
+const optionsMenu=document.getElementById("options");
 //------------------------------Functions-----------------------------//
 //renders an empty 10x10 grid in the DOM
 function createEmptyGrid(id, parentDivElement){
@@ -193,7 +193,7 @@ createShips();
 
 console.log(compArray)
 
-//render
+//render 0=empty 1=miss 2=ship not hit 3=ship hit
 function render(){
     for (let i=0; i<10; i++){
         for (let j=0; j<10; j++){
@@ -201,7 +201,7 @@ function render(){
             let cellID = `${i},${j}`;
             //render of player grid
             if (myArray[i][j] === 0 || myArray[i][j] === 2){
-                document.getElementById(`myArray,${cellID}`).innerHTML = ""; //empty unhit/ ship unhit
+                document.getElementById(`myArray,${cellID}`).style.backgroundImage="none";
             }
             if (myArray[i][j] === 1){
                 document.getElementById(`myArray,${cellID}`).style.backgroundImage="url('/images/o.png')";
@@ -213,7 +213,7 @@ function render(){
             }
             //render of computer grid
             if (compArray[i][j] === 0 || compArray[i][j] === 2){
-                document.getElementById(`compArray,${cellID}`).innerHTML = ""; //empty unhit/ ship unhit
+                document.getElementById(`compArray,${cellID}`).style.backgroundImage="none";
             }
             if (compArray[i][j] === 1){
                 document.getElementById(`compArray,${cellID}`).style.backgroundImage="url('/images/o.png')"
@@ -243,6 +243,24 @@ function myTurnIndicatorOff(){
     playerTurnIndicator.classList.remove("turn-indicator-on-blue")
     myGridDiv.style.boxShadow="0px 0px 10px 5px var(--red-glow)"
     compGridDiv.style.boxShadow=""
+}
+
+function showSecondPageElements(){
+    body.classList.remove("page-1-layout");
+    body.classList.add("page-2-layout");
+    compGridDiv.style.display="grid";
+    compTurnIndicatorDiv.style.display = "flex";
+    playerTurnIndicatorDiv.style.display = "flex";
+    optionsMenu.style.display = "flex"
+}
+
+function init(){
+    compArray = createEmptyArray();
+    generateRandomShipLocations();
+    render();
+    myTurn = true;
+    myTurnIndicatorOn();
+    AIGuessesLeft = generateGuessesArray()
 }
 
 //------------------------------Event Listeners-----------------------------//
@@ -373,19 +391,29 @@ myGridDiv.addEventListener("click", function(e){
     }
 })
 
-//Clears Starting Page
+//Switches from start page layout to game page layout
 startButton.addEventListener("click", function(e){
     startButton.style.display="none";
-    compGridDiv.style.display="grid";
-    body.classList.remove("page-1-layout");
-    body.classList.add("page-2-layout");
-    compTurnIndicatorDiv.style.display = "flex";
-    playerTurnIndicatorDiv.style.display = "flex";
+    showSecondPageElements();
     generateRandomShipLocations()
     render()
     myTurnIndicatorOn()
 }
 )
+
+optionsMenu.addEventListener("click", function(e){
+    //RESET: clears game state array while maintaining placed ship locations. 
+    //       generates new computer ship locations
+    if (e.target.id ==="reset"){
+        for (let i=0; i<10; i++){
+            for(let j=0; j<10; j++){
+                if (myArray[i][j] === 1) myArray[i][j] = 0;
+                if (myArray[i][j] === 3) myArray[i][j] = 2;
+            }
+        }
+        init();
+    }
+})
 
 //Game flow logic
 compGridDiv.addEventListener("click", function(e){
