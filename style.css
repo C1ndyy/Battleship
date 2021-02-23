@@ -1,3 +1,12 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;900&display=swap');
+
+body{
+    font-family: 'Orbitron', sans-serif;
+    background-color: #01012b;
+    color:white;
+}
+
 .hidden {
     display: none;
 }
@@ -24,17 +33,13 @@
         "my-grid comp-grid";
 }
 
-
-
-
-
 header{
     grid-area: hdr;
     font-size: 10vh;
     justify-self: center;
     align-self: center;
+    color: white
 }
-
 /* -----------Turn Indicators-------------*/
 #comp-turn {
     grid-area: comp-turn;
@@ -56,6 +61,7 @@ p {
     padding: 6px;
     font-size: 20px;
     border-radius: 6px;
+   
     margin: 20px;
 }
 
@@ -64,6 +70,7 @@ p {
     color: rgb(101, 214, 101);
     background-color: rgb(225, 241, 200);
     border: 2px solid rgb(101, 214, 101);
+    box-shadow: 0 0 10px 10px greenyellow;
 
 }
 
@@ -74,52 +81,47 @@ p {
 }
 
 
-/* -----------My Grid-------------*/
-#my-grid{
-    grid-area:my-grid;
-    display: grid;
-    grid-template-columns: repeat(10, 50px);
-    grid-template-columns: repeat(10, 50px);
-    height: 500px;
-    width: 500px;
+/* ---------------------Grid-----------------------*/
+
+.grid {
+    grid-template-columns: repeat(10, 4vw);
+    grid-template-columns: repeat(10, 4vw);
+    height: 40vw;
+    width: 40vw;
     justify-self: center;
-    
 }
 
-#my-grid>div{
-    border: 1px solid black;
+.grid>div {
+    border: 1px solid rgb(255, 255, 255);
+    background-color: #162a53;
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 4vh;
+    color: white;
+}
+
+#my-grid{
+    grid-area:my-grid;
+    display: grid;
+    margin: 20px 5px 30px 30px;
+}
+
+#comp-grid{
+    grid-area:comp-grid;
+    display: none;
+    margin: 20px 30px 30px 5px;
 }
 
 #my-grid>div:hover{
     background-color: rgb(235, 93, 93);
 }
 
-/* -----------Comp Grid-------------*/
-#comp-grid{
-    grid-area:comp-grid;
-    display: none;
-    grid-template-columns: repeat(10, 50px);
-    grid-template-columns: repeat(10, 50px);
-    height: 500px;
-    width: 500px;
-    justify-self: center;
-    
-}
-
-#comp-grid>div{
-    border: 1px solid black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 #comp-grid>div:hover{
     background-color: cornflowerblue;
 }
 
+/* -------------------buttons-------------------- */
 #buttons-container{
     grid-area: ships-container;
     display: flex;
@@ -147,8 +149,8 @@ p {
 }
  
 #ships-container>div>div{
-    height: 50px;
-    width: 50px;
+    height: 40px;
+    width: 40px;
 }
 
 #carrier{
@@ -200,7 +202,7 @@ p {
 }   
 
 .selected {
-    border: 5px solid black;
+    box-shadow: 0 0 15px 2px rgb(255, 255, 255);
 }
 
 .horizantal {

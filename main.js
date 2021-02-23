@@ -19,6 +19,7 @@ const gridColor="white"
 const body=document.querySelector("body");
 const myGridDiv=document.getElementById("my-grid");
 const compGridDiv=document.getElementById("comp-grid");
+const myGridCells=document.querySelectorAll("#my-grid>div")
 const shipContainer=document.getElementById("ships-container");
 let startButton=document.getElementById("start-button");
 let selectedShip=document.querySelector(".selected");
@@ -199,30 +200,26 @@ function render(){
             //convert index of game state array to an ID - to target the ID of button being rendered
             let cellID = `${i},${j}`;
             //render of player grid
-            if (myArray[i][j] === 0){
-                document.getElementById(`myArray,${cellID}`).innerHTML = ""; //empty
+            if (myArray[i][j] === 0 || myArray[i][j] === 2){
+                document.getElementById(`myArray,${cellID}`).innerHTML = ""; //empty unhit/ ship unhit
             }
             if (myArray[i][j] === 1){
-                document.getElementById(`myArray,${cellID}`).innerHTML = "⨉"; //miss
-            }
-            if (myArray[i][j] === 2){
-                document.getElementById(`myArray,${cellID}`).innerHTML = "▢"; //ship-intact
+                document.getElementById(`myArray,${cellID}`).innerHTML = "o"; //miss
             }
             if (myArray[i][j] === 3){
-                document.getElementById(`myArray,${cellID}`).innerHTML = "☒"; //ship-hit
+                document.getElementById(`myArray,${cellID}`).innerHTML = "x"; //hit
+                document.getElementById(`myArray,${cellID}`).style.color = "red";
             }
             //render of computer grid
-            if (compArray[i][j] === 0){
-                document.getElementById(`compArray,${cellID}`).innerHTML = ""; //empty
+            if (compArray[i][j] === 0 || compArray[i][j] === 2){
+                document.getElementById(`compArray,${cellID}`).innerHTML = ""; //empty unhit/ ship unhit
             }
             if (compArray[i][j] === 1){
-                document.getElementById(`compArray,${cellID}`).innerHTML = "⨉"; //miss
+                document.getElementById(`compArray,${cellID}`).innerHTML = "o"; //miss
             }           
-            if (compArray[i][j] === 2){
-                document.getElementById(`compArray,${cellID}`).innerHTML = ""; //ship-intact-hidden
-            }
             if (compArray[i][j] === 3){
-                document.getElementById(`compArray,${cellID}`).innerHTML = "☒"; //ship-hit
+                document.getElementById(`compArray,${cellID}`).innerHTML = "x"; //hit
+                document.getElementById(`compArray,${cellID}`).style.color= "red";
             }
         }
     }
@@ -244,10 +241,13 @@ function myTurnIndicatorOff(){
 
 //------------------------------Event Listeners-----------------------------//
 
-//Select Ship
+//Select Ship and rotate
 shipContainer.addEventListener("click", function(evt){
     let clickedShip = evt.target.parentElement
-    if (clickedShip.classList.contains("selected")) clickedShip.classList.toggle("selected");
+    if (clickedShip.classList.contains("selected")){
+        // clickedShip.classList.toggle("selected");
+        clickedShip.classList.toggle("horizantal");
+    } 
     else {
         let allShips = document.querySelectorAll(".ship");
         allShips.forEach(function(ship){
@@ -258,12 +258,6 @@ shipContainer.addEventListener("click", function(evt){
         }
     }
 })
-
-//flips axis of selected ship
-document.addEventListener('keyup', function(e){
-    let clickedship = document.querySelector('.selected');
-    clickedship.classList.toggle("horizantal");
-});
 
 //Hover over to see ship placement location
 myGridDiv.addEventListener("mouseover", function(e){
@@ -277,31 +271,34 @@ myGridDiv.addEventListener("mouseover", function(e){
     let shipSize = 0;
     let shipColor= gridColor;
     let axis = 1;
-    ships.forEach(function(ship){
-        if (ship.name == clickedShip.id){
-            shipSize = ship.size;
-            shipColor = ship.color;
-        }
-    })
-    if (clickedShip.classList.contains("horizantal")) axis = -1;
-    if(checkFit(myArray,x,y,shipSize,axis)){
-        hoveredCell.style.backgroundColor = shipColor
-        //vertical
-        if (axis === 1){
-            for (i=0; i<shipSize; i++) {
-                let id = `myArray,${x+i},${y}`
-                let adjacentcell= document.getElementById(id)
-                adjacentcell.style.backgroundColor = shipColor
+    if(clickedShip != null && typeof clickedShip !== "undefined"){
+        ships.forEach(function(ship){
+            if (ship.name == clickedShip.id){
+                shipSize = ship.size;
+                shipColor = ship.color;
             }
-        }
-        else if (axis === -1){
-            for (i=0; i<shipSize; i++) {
-                let id = `myArray,${x},${y+i}`
-                let adjacentcell= document.getElementById(id)
-                adjacentcell.style.backgroundColor = shipColor
+        })
+        if (clickedShip.classList.contains("horizantal")) axis = -1;
+        if(checkFit(myArray,x,y,shipSize,axis)){
+            hoveredCell.style.backgroundColor = shipColor
+            //vertical
+            if (axis === 1){
+                for (i=0; i<shipSize; i++) {
+                    let id = `myArray,${x+i},${y}`
+                    let adjacentcell= document.getElementById(id)
+                    adjacentcell.style.backgroundColor = shipColor
+                }
             }
-        } 
+            else if (axis === -1){
+                for (i=0; i<shipSize; i++) {
+                    let id = `myArray,${x},${y+i}`
+                    let adjacentcell= document.getElementById(id)
+                    adjacentcell.style.backgroundColor = shipColor
+                }
+            } 
+        }
     }
+ 
 })
 
 //clears grid as mouse hovers away
@@ -313,27 +310,33 @@ myGridDiv.addEventListener("mouseout", function(e){
     let clickedShip = document.querySelector('.selected');
     let shipSize = 0;
     let axis = 1;
-    ships.forEach(function(ship){
-        if (ship.name == clickedShip.id) shipSize = ship.size;
-    })
-    e.target.style.backgroundColor=""
-    if (clickedShip.classList.contains("horizantal")) axis = -1;
-    //vertical
-    if (axis === 1){
-        for (i=0; i<shipSize; i++) {
-            let id = `myArray,${x+i},${y}`
-            let adjacentcell= document.getElementById(id)
-            adjacentcell.style.backgroundColor = ""
+    if (myArray[x][y] === 0){
+        if(clickedShip != null && typeof clickedShip !== "undefined"){
+            ships.forEach(function(ship){
+                if (ship.name == clickedShip.id) shipSize = ship.size;
+            })
+            e.target.style.backgroundColor=""
+            if (clickedShip.classList.contains("horizantal")) axis = -1;
+            //vertical
+            if (axis === 1){
+                for (i=0; i<shipSize; i++) {
+                    let id = `myArray,${x+i},${y}`
+                    let adjacentcell= document.getElementById(id)
+                    if (myArray[x+i][y] === 0) adjacentcell.style.backgroundColor = ""
+                }
+            }
+            else if (axis === -1){
+                for (i=0; i<shipSize; i++) {
+                    let id = `myArray,${x},${y+i}`
+                    let adjacentcell= document.getElementById(id)
+                    if (myArray[x][y+i] === 0) adjacentcell.style.backgroundColor = ""
+                }
+        
+            } 
         }
     }
-    else if (axis === -1){
-        for (i=0; i<shipSize; i++) {
-            let id = `myArray,${x},${y+i}`
-            let adjacentcell= document.getElementById(id)
-            adjacentcell.style.backgroundColor = ""
-        }
+    
 
-    } 
 })
 
 //Place ship
