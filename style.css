@@ -1,9 +1,15 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;900&display=swap');
 
+:root {
+    --blue-glow: rgb(174, 187, 248);
+    --red-glow: rgb(248, 155, 155);
+    --background: #01012b;
+}
+
 body{
     font-family: 'Orbitron', sans-serif;
-    background-color: #01012b;
+    background-color: var(--background);
     color:white;
 }
 
@@ -38,9 +44,10 @@ header{
     font-size: 10vh;
     justify-self: center;
     align-self: center;
-    color: white
+    color: white;
+    text-shadow: 0px 0px 10px var(--blue-glow);
 }
-/* -----------Turn Indicators-------------*/
+/* ---------------------------Turn Indicators---------------------------*/
 #comp-turn {
     grid-area: comp-turn;
     display: none;
@@ -65,13 +72,20 @@ p {
     margin: 20px;
 }
 
-.turn-indicator-on {
-    font-weight: bold;
-    color: rgb(101, 214, 101);
-    background-color: rgb(225, 241, 200);
-    border: 2px solid rgb(101, 214, 101);
-    box-shadow: 0 0 10px 10px greenyellow;
+.turn-indicator-on-red {
+    font-weight: normal;
+    color: rgb(255, 255, 255);
+    text-shadow: 0px 0px 5px var(--red-glow);
+    border: 2px solid rgb(255, 255, 255);
+    box-shadow: 0 0 10px 4px var(--red-glow);
+}
 
+.turn-indicator-on-blue {
+    font-weight: normal;
+    color: rgb(255, 255, 255);
+    text-shadow: 0px 0px 5px var(--blue-glow);
+    border: 2px solid rgb(255, 255, 255);
+    box-shadow: 0 0 10px 4px var(--blue-glow);
 }
 
 .turn-indicator-off {
@@ -81,24 +95,35 @@ p {
 }
 
 
-/* ---------------------Grid-----------------------*/
+/* --------------------------------Grid---------------------------------*/
 
+/* main grids */
 .grid {
     grid-template-columns: repeat(10, 4vw);
     grid-template-columns: repeat(10, 4vw);
     height: 40vw;
     width: 40vw;
     justify-self: center;
+    /* box-shadow: 0px 0px 10px 5px var(--blue-glow); */
 }
 
+/* grid cells*/
 .grid>div {
-    border: 1px solid rgb(255, 255, 255);
-    background-color: #162a53;
+    border: 1px solid #d7dff8;
+    background-color: #2d3a53;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 4vh;
-    color: white;
+    font-size: 3vh;
+    color: rgb(198, 201, 214);
+    
+    /* background-size: cover; */
+
+    /* min-height: 0;
+    min-width: 0;
+    overflow: hidden; */
+    /* text-overflow: ellipsis; */
+    /* white-space: nowrap; */
 }
 
 #my-grid{
@@ -121,7 +146,7 @@ p {
     background-color: cornflowerblue;
 }
 
-/* -------------------buttons-------------------- */
+/* ----------------------------buttons------------------------------ */
 #buttons-container{
     grid-area: ships-container;
     display: flex;
@@ -138,7 +163,22 @@ p {
     align-items: center;
 }
 
+#start-button {
+    border: 5px solid rgb(255, 255, 255);
+    border-radius: 6px;
+    background-color: var(--background);
+    box-shadow: 0px 0px 10px 5px rgb(243, 176, 89);
+    font-family: 'Orbitron', sans-serif;
+    color: white;
+    text-shadow: 0px 0px 5px rgb(243, 176, 89);
+}
 
+#start-button:hover {
+    text-shadow: 0px 0px 20px rgb(243, 176, 89);
+    box-shadow: 0px 0px 20px 10px rgb(243, 176, 89);
+}
+
+/* -------------------------------Ships------------------------------- */
 #ships-container{
     grid-area: ships-container;
 }

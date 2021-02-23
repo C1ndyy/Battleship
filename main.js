@@ -204,39 +204,45 @@ function render(){
                 document.getElementById(`myArray,${cellID}`).innerHTML = ""; //empty unhit/ ship unhit
             }
             if (myArray[i][j] === 1){
-                document.getElementById(`myArray,${cellID}`).innerHTML = "o"; //miss
+                document.getElementById(`myArray,${cellID}`).style.backgroundImage="url('/images/o.png')";
+                document.getElementById(`myArray,${cellID}`).style.backgroundSize="cover";
             }
             if (myArray[i][j] === 3){
-                document.getElementById(`myArray,${cellID}`).innerHTML = "x"; //hit
-                document.getElementById(`myArray,${cellID}`).style.color = "red";
+                document.getElementById(`myArray,${cellID}`).style.backgroundImage="url('/images/x.png')";
+                document.getElementById(`myArray,${cellID}`).style.backgroundSize="cover";
             }
             //render of computer grid
             if (compArray[i][j] === 0 || compArray[i][j] === 2){
                 document.getElementById(`compArray,${cellID}`).innerHTML = ""; //empty unhit/ ship unhit
             }
             if (compArray[i][j] === 1){
-                document.getElementById(`compArray,${cellID}`).innerHTML = "o"; //miss
+                document.getElementById(`compArray,${cellID}`).style.backgroundImage="url('/images/o.png')"
+                document.getElementById(`compArray,${cellID}`).style.backgroundSize="cover";
             }           
             if (compArray[i][j] === 3){
-                document.getElementById(`compArray,${cellID}`).innerHTML = "x"; //hit
-                document.getElementById(`compArray,${cellID}`).style.color= "red";
+                document.getElementById(`compArray,${cellID}`).style.backgroundImage="url('/images/x.png')"
+                document.getElementById(`compArray,${cellID}`).style.backgroundSize="cover";
             }
         }
     }
 }
 
 function myTurnIndicatorOn(){
-    playerTurnIndicator.classList.add("turn-indicator-on")
+    playerTurnIndicator.classList.add("turn-indicator-on-blue")
     playerTurnIndicator.classList.remove("turn-indicator-off")
     compTurnIndicator.classList.add("turn-indicator-off")
-    compTurnIndicator.classList.remove("turn-indicator-on")
+    compTurnIndicator.classList.remove("turn-indicator-on-red")
+    compGridDiv.style.boxShadow="0px 0px 10px 5px var(--blue-glow)"
+    myGridDiv.style.boxShadow=""
 }
 
 function myTurnIndicatorOff(){
-    compTurnIndicator.classList.add("turn-indicator-on")
+    compTurnIndicator.classList.add("turn-indicator-on-red")
     compTurnIndicator.classList.remove("turn-indicator-off")
     playerTurnIndicator.classList.add("turn-indicator-off")
-    playerTurnIndicator.classList.remove("turn-indicator-on")
+    playerTurnIndicator.classList.remove("turn-indicator-on-blue")
+    myGridDiv.style.boxShadow="0px 0px 10px 5px var(--red-glow)"
+    compGridDiv.style.boxShadow=""
 }
 
 //------------------------------Event Listeners-----------------------------//
@@ -377,6 +383,7 @@ startButton.addEventListener("click", function(e){
     playerTurnIndicatorDiv.style.display = "flex";
     generateRandomShipLocations()
     render()
+    myTurnIndicatorOn()
 }
 )
 
