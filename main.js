@@ -28,6 +28,8 @@ const playerTurnIndicatorDiv = document.getElementById("my-turn");
 const compTurnIndicator = document.querySelector("#comp-turn>p");
 const playerTurnIndicator = document.querySelector("#my-turn>p");
 const optionsMenu=document.getElementById("options");
+const winnerPopUp=document.getElementById("winner-pop-up");
+const winnerPopUpMessage=document.getElementById("winner-message");
 //------------------------------Functions-----------------------------//
 //renders an empty 10x10 grid in the DOM
 function createEmptyGrid(id, parentDivElement){
@@ -159,7 +161,6 @@ function checkWin(array){
         }
 
     }
-    alert("GAME OVER")
     return true;
 }
 
@@ -405,13 +406,17 @@ optionsMenu.addEventListener("click", function(e){
     //RESET: clears game state array while maintaining placed ship locations. 
     //       generates new computer ship locations
     if (e.target.id ==="reset"){
-        for (let i=0; i<10; i++){
-            for(let j=0; j<10; j++){
-                if (myArray[i][j] === 1) myArray[i][j] = 0;
-                if (myArray[i][j] === 3) myArray[i][j] = 2;
-            }
-        }
-        init();
+        document.getElementById("reset-popup").style.display="block";
+        // for (let i=0; i<10; i++){
+        //     for(let j=0; j<10; j++){
+        //         if (myArray[i][j] === 1) myArray[i][j] = 0;
+        //         if (myArray[i][j] === 3) myArray[i][j] = 2;
+        //     }
+        // }
+        // init();
+    }
+    if (e.target.id ==="quit"){
+        document.getElementById("quit-popup").style.display="block";
     }
 })
 
@@ -423,24 +428,32 @@ compGridDiv.addEventListener("click", function(e){
         let x=Number(clickedCell[1]);
         let y=Number(clickedCell[2]);
         if (validClick(x,y)){
+            //Player Move
             checkHit(compArray,x,y);
             render();
-            checkWin(compArray)
+            if (checkWin(compArray)){
+                winnerPopUp.style.display = "block"
+                winnerPopUpMessage.innerHTML = "You Win!"
+            }
             myTurn = false;
             myTurnIndicatorOff()
 
+            //Computer Move
             setTimeout(function(){
                 let AIGuess = generateAIGuess()
                 checkHit(myArray, AIGuess[0], AIGuess[1])
                 render()
-                checkWin(myArray)
-
+                if (checkWin(myArray)){
+                    winnerPopUp.style.display = "block"
+                    winnerPopUpMessage.innerHTML = "You lost against the computer!"
+                }
+                
                 setTimeout(function(){
                     myTurn = true
                     myTurnIndicatorOn()
-                },500)
+                },100)
 
-            }, 500);
+            }, 100);
         }
     }
 })

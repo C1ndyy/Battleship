@@ -31,10 +31,41 @@
     </div>
 
     <div id="options">
-        <div id="quit" onclick="window.location.reload()">Quit Game</div>
+        <div id="quit">Quit Game</div>
         <div id="reset">Reset</div>
         <div id="sound">Sound on</div>
     </div>
+
+    <div id="winner-pop-up" class="popup">
+        <div class="popup-contents">
+            <div id="winner-message">display winner message here</div>
+            <div class="popup-options">
+                <div>Exit to main page</div>
+                <div>Play Again</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="quit-popup" class="popup">
+        <div class="popup-contents">
+            <div>Are you sure you want to leave?</div>
+            <div class="popup-options">
+                <div onclick="window.location.reload()">Yes</div>
+                <div class="cancel">Cancel</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="reset-popup" class="popup">
+        <div class="popup-contents">
+            <div >Are you sure you want to restart this game?</div>
+            <div class="popup-options">
+                <div>Yes</div>
+                <div class="cancel">Cancel</div>
+            </div>
+        </div>
+    </div>
+
 
 </body>
 </html>
