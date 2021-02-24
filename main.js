@@ -30,6 +30,7 @@ const playerTurnIndicator = document.querySelector("#my-turn>p");
 const optionsMenu=document.getElementById("options");
 const winnerPopUp=document.getElementById("winner-pop-up");
 const winnerPopUpMessage=document.getElementById("winner-message");
+
 //------------------------------Functions-----------------------------//
 //renders an empty 10x10 grid in the DOM
 function createEmptyGrid(id, parentDivElement){
@@ -403,17 +404,9 @@ startButton.addEventListener("click", function(e){
 )
 
 optionsMenu.addEventListener("click", function(e){
-    //RESET: clears game state array while maintaining placed ship locations. 
-    //       generates new computer ship locations
+    
     if (e.target.id ==="reset"){
         document.getElementById("reset-popup").style.display="block";
-        // for (let i=0; i<10; i++){
-        //     for(let j=0; j<10; j++){
-        //         if (myArray[i][j] === 1) myArray[i][j] = 0;
-        //         if (myArray[i][j] === 3) myArray[i][j] = 2;
-        //     }
-        // }
-        // init();
     }
     if (e.target.id ==="quit"){
         document.getElementById("quit-popup").style.display="block";
@@ -458,3 +451,33 @@ compGridDiv.addEventListener("click", function(e){
     }
 })
 
+let resetPopup = document.getElementById("reset-popup")
+resetPopup.addEventListener("click", function(e){
+    if (e.target.classList.contains("yes")){
+        for (let i=0; i<10; i++){
+            for(let j=0; j<10; j++){
+                if (myArray[i][j] === 1) myArray[i][j] = 0;
+                if (myArray[i][j] === 3) myArray[i][j] = 2;
+            }
+        }
+        init();
+        resetPopup.style.display="none"
+    }
+    if (e.target.classList.contains("cancel")){
+        resetPopup.style.display="none"
+    }
+})
+
+
+winnerPopUp.addEventListener("click", function(e){
+    if (e.target.classList.contains("reset")){
+        for (let i=0; i<10; i++){
+            for(let j=0; j<10; j++){
+                if (myArray[i][j] === 1) myArray[i][j] = 0;
+                if (myArray[i][j] === 3) myArray[i][j] = 2;
+            }
+        }
+        init();
+        winnerPopUp.style.display="none"
+    }
+})
