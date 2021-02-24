@@ -184,14 +184,24 @@ function generateAIGuess(){
         }
     }
     //random guess if no open leads
-    while (true){
+    for (let i=0; i<500; i++){
         let x= Math.floor(Math.random() * 10)
         let y= Math.floor(Math.random() * 10)
         if (myArray[x][y] === 0 || myArray[x][y] == 2){
             //dont return single empty cell surrounded by misses
             if (checkAdjacentCells(x,y) != false) return [x,y]
         }   
-    }     
+    }
+    
+    //if no more posibble random locations, check beside existing ships
+    for (let i = 0; i<10; i++){
+        for (let j=0; j<10; j++){
+            if (myArray[i][j]===3){
+                let nextGuess = checkAdjacentCells(i,j)
+                if (nextGuess != false) return nextGuess;
+            }
+        }
+    }
 }
 
 const directions= [

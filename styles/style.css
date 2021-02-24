@@ -327,9 +327,9 @@ p {
         grid-template-areas: 
             "hdr"
             "my-turn"
-            "my-grid" 
-            "comp-turn" 
             "comp-grid"
+            "comp-turn" 
+            "my-grid" 
             "options";
     }
     .grid {
