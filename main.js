@@ -2,7 +2,8 @@
 let myArray = createEmptyArray();
 let compArray = createEmptyArray();
 let myTurn = true;
-let AIGuessesLeft = generateGuessesArray()
+let AIGuessesLeft = generateGuessesArray();
+let foundShips = [];
 
 const ships=[
     {name: "carrier", size: 5, color: "rgb(252, 186, 162)"},
@@ -70,12 +71,6 @@ function createShips(){
         }
     })
 }
-
-//TODO
-// function highlightGridCells(){
-
-// }
-
 
 //generate random ship locations
 function generateRandomShipLocations(){
@@ -150,6 +145,10 @@ function checkHit(array,x,y){
     //if cell has ship (2) update game state array to hit (3)
     else if (array[x][y] === 2){
         array[x][y] = 3;
+        if (array === myArray){
+            foundShips.push([x,y]);
+            console.log(foundShips);
+        }    
         return true;
     }
 }
@@ -165,10 +164,16 @@ function checkWin(array){
     return true;
 }
 
-//AI launch attach--> TODO: Hard Mode
+//AI launch attach-
 function generateAIGuess(){
-    // console.log(AIGuessesLeft)
+    // if (halfSunkShips.length != 0){
+
+    // }
+
+
     return AIGuessesLeft.pop()
+
+    //}
 }
 
 //creates a shuffled array of all possible guesses
@@ -403,16 +408,6 @@ startButton.addEventListener("click", function(e){
 }
 )
 
-optionsMenu.addEventListener("click", function(e){
-    
-    if (e.target.id ==="reset"){
-        document.getElementById("reset-popup").style.display="block";
-    }
-    if (e.target.id ==="quit"){
-        document.getElementById("quit-popup").style.display="block";
-    }
-})
-
 //Game flow logic
 compGridDiv.addEventListener("click", function(e){
     console.log(compArray)
@@ -451,6 +446,18 @@ compGridDiv.addEventListener("click", function(e){
     }
 })
 
+//bottom menu options
+optionsMenu.addEventListener("click", function(e){
+    
+    if (e.target.id ==="reset"){
+        document.getElementById("reset-popup").style.display="block";
+    }
+    if (e.target.id ==="quit"){
+        document.getElementById("quit-popup").style.display="block";
+    }
+})
+
+//reset popup 
 let resetPopup = document.getElementById("reset-popup")
 resetPopup.addEventListener("click", function(e){
     if (e.target.classList.contains("yes")){
@@ -468,7 +475,13 @@ resetPopup.addEventListener("click", function(e){
     }
 })
 
+//quit game popup
+let quitPopup = document.getElementById("quit-popup")
+quitPopup.addEventListener("click", function(e){
+    if (e.target.classList.contains("cancel")) quitPopup.style.display="none";
+})
 
+//win/loser popup
 winnerPopUp.addEventListener("click", function(e){
     if (e.target.classList.contains("reset")){
         for (let i=0; i<10; i++){

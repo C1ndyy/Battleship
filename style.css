@@ -104,7 +104,6 @@ p {
     height: 40vw;
     width: 40vw;
     justify-self: center;
-    /* box-shadow: 0px 0px 10px 5px var(--blue-glow); */
 }
 
 /* grid cells*/
@@ -237,11 +236,12 @@ p {
 /* -------------------------------Ships------------------------------- */
 #ships-container{
     grid-area: ships-container;
+    text-align: center;
 }
 
 #ships-container>div{
     display: inline-block;;
-    margin: 2px 50px;
+    margin: 10px 50px;
 }
  
 #ships-container>div>div{
@@ -304,3 +304,52 @@ p {
 .horizantal {
     transform: rotate(90deg);
 }
+
+
+/* -------------------------------Media Query------------------------------- */
+@media only screen and (max-width: 700px) {
+    .page-1-layout{
+        height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 2fr 2fr;
+        grid-template-areas: 
+            "hdr"
+            "my-grid"
+            "ships-container";
+    }
+    
+    .page-2-layout{
+        height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 100px 40px 1fr 40px 1fr 20px ;
+        grid-template-areas: 
+            "hdr"
+            "my-turn"
+            "my-grid" 
+            "comp-turn" 
+            "comp-grid"
+            "options";
+    }
+    .grid {
+        grid-template-columns: repeat(10, 5.5vw);
+        grid-template-columns: repeat(10, 5.5vw);
+        height: 55vw;
+        width: 55vw;
+        justify-self: center;
+    }
+
+    #my-grid{
+        margin: 10px;
+    }
+        
+    #comp-grid{
+        margin: 10px;
+    }    
+
+    #ships-container>div>div{
+        height: 30px;
+        width: 30px;
+    }
+  }
