@@ -257,7 +257,7 @@ function render(){
                 document.getElementById(`myArray,${cellID}`).style.backgroundImage="none";
             }
             if (myArray[i][j] === 1){
-                document.getElementById(`myArray,${cellID}`).style.backgroundImage="url(./assets/o.png')";
+                document.getElementById(`myArray,${cellID}`).style.backgroundImage="url(./assets/o.png)";
                 document.getElementById(`myArray,${cellID}`).style.backgroundSize="cover";
             }
             if (myArray[i][j] === 3){
