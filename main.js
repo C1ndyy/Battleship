@@ -2,8 +2,6 @@
 let myArray = createEmptyArray();
 let compArray = createEmptyArray();
 let myTurn = true;
-let AIGuessesLeft = generateGuessesArray();
-let foundShips = [];
 
 const ships=[
     {name: "carrier", size: 5, color: "rgb(252, 186, 162)"},
@@ -15,6 +13,8 @@ const ships=[
 ];
 
 const gridColor="white"
+
+
 
 //--------------------------cached variables--------------------------//
 const body=document.querySelector("body");
@@ -145,10 +145,6 @@ function checkHit(array,x,y){
     //if cell has ship (2) update game state array to hit (3)
     else if (array[x][y] === 2){
         array[x][y] = 3;
-        if (array === myArray){
-            foundShips.push([x,y]);
-            console.log(foundShips);
-        }    
         return true;
     }
 }
@@ -164,34 +160,84 @@ function checkWin(array){
     return true;
 }
 
-//AI launch attach-
+//generate an AI Guess- Main function
 function generateAIGuess(){
-    // if (halfSunkShips.length != 0){
-
-    // }
-
-
-    return AIGuessesLeft.pop()
-
-    //}
-}
-
-//creates a shuffled array of all possible guesses
-function generateGuessesArray(){
-    let arr=[]
-    for (let i=0; i<10; i++){
+    //target half sunk ships
+    for (let i = 0; i<10; i++){
         for (let j=0; j<10; j++){
-            arr.push([i,j])
+            if (myArray[i][j]===3){
+                let orientation = guessShipOrientation(i,j)
+                console.log(orientation)
+                //if orientation cannot be assumed yet (only one data point) -> keep checking adjacent cells
+                if (typeof guessShipOrientation(i,j) == "undefined"){
+                    let nextGuess = checkAdjacentCells(i,j)
+                    console.log(nextGuess)
+                    if (nextGuess != false) return nextGuess;
+                }
+                //if orientation is known keep checking in that direction until ship fully sunk
+                else{
+                    let nextGuess = checkOrientation(orientation,i,j)
+                    console.log(nextGuess)
+                    if (nextGuess != false) return nextGuess;
+                }
+            }    
         }
     }
-    //Fisher-Yates shuffle algorithm below taken from 'The Art of Computer Programming' by Donald E. Knuth
-    for (let i=arr.length-1; i>0; i--){
-      let j= Math.floor(Math.random() * i)
-      let temp = arr[i]
-      arr[i] = arr[j]
-      arr[j] = temp
+    //random guess if no open leads
+    while (true){
+        let x= Math.floor(Math.random() * 10)
+        let y= Math.floor(Math.random() * 10)
+        if (myArray[x][y] === 0 || myArray[x][y] == 2){
+            //dont return single empty cell surrounded by misses
+            if (checkAdjacentCells(x,y) != false) return [x,y]
+        }   
+    }     
+}
+
+const directions= [
+    {direction: "up", xcor: 1, ycor: 0, orientation: "vertical"},
+    {direction: "left", xcor: 0, ycor: 1, orientation: "horizantal"},
+    {direction: "down", xcor: -1, ycor: 0, orientation: "vertical"},
+    {direction: "right", xcor: 0, ycor: -1, orientation: "horizantal"},
+]
+
+//checks adjacent cells for an empty cell
+function checkAdjacentCells(x,y){
+    for (let i of directions){
+        if( x+i.xcor <=9 && x+i.xcor >=0 && y+i.ycor <=9 && y+i.ycor >= 0){
+            if (myArray[x+i.xcor][y+i.ycor] === 0 || myArray[x+i.xcor][y+i.ycor] === 2){
+                return [[x+i.xcor],[y+i.ycor]]
+            }
+        }    
     }
-    return arr;
+    return false;
+}   
+
+//checks adjacent cells for an empty cell- ONLY along specified orientation
+function checkOrientation(orientation,x,y){
+    for (let i of directions){
+        if (i.orientation == orientation){
+            if( x+i.xcor <=9 && x+i.xcor >=0 && y+i.ycor <=9 && y+i.ycor >= 0){
+                if (myArray[x+i.xcor][y+i.ycor] === 0 || myArray[x+i.xcor][y+i.ycor] === 2){
+                    return [[x+i.xcor],[y+i.ycor]]
+                }
+            }    
+        }
+    }
+    return false;
+}              
+
+//retunrns orientation of half sunk ships 
+function guessShipOrientation(x,y){
+    for (let i of directions){
+        if( x+i.xcor <=9 && x+i.xcor >=0 && y+i.ycor <=9 && y+i.ycor >= 0){
+            if (myArray[x+i.xcor][y+i.ycor] === 3){
+                // console.log (i.orientation)
+                // console.log(typeof i.orientation)
+                return i.orientation
+            }
+        }
+    }
 }
 
 createEmptyGrid("myArray", myGridDiv); //my DOM Grid
@@ -267,7 +313,6 @@ function init(){
     render();
     myTurn = true;
     myTurnIndicatorOn();
-    AIGuessesLeft = generateGuessesArray()
 }
 
 //------------------------------Event Listeners-----------------------------//
