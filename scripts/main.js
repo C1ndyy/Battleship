@@ -257,11 +257,11 @@ function render(){
                 document.getElementById(`myArray,${cellID}`).style.backgroundImage="none";
             }
             if (myArray[i][j] === 1){
-                document.getElementById(`myArray,${cellID}`).style.backgroundImage="url(../assets/o.png)";
+                document.getElementById(`myArray,${cellID}`).style.backgroundImage="url(./assets/o.png)";
                 document.getElementById(`myArray,${cellID}`).style.backgroundSize="cover";
             }
             if (myArray[i][j] === 3){
-                document.getElementById(`myArray,${cellID}`).style.backgroundImage="url(/assets/x.png)";
+                document.getElementById(`myArray,${cellID}`).style.backgroundImage="url(./assets/x.png)";
                 document.getElementById(`myArray,${cellID}`).style.backgroundSize="cover";
             }
             //render of computer grid
@@ -269,11 +269,11 @@ function render(){
                 document.getElementById(`compArray,${cellID}`).style.backgroundImage="none";
             }
             if (compArray[i][j] === 1){
-                document.getElementById(`compArray,${cellID}`).style.backgroundImage="url('../assets/o.png')"
+                document.getElementById(`compArray,${cellID}`).style.backgroundImage="url(./assets/o.png)"
                 document.getElementById(`compArray,${cellID}`).style.backgroundSize="cover";
             }           
             if (compArray[i][j] === 3){
-                document.getElementById(`compArray,${cellID}`).style.backgroundImage="url(/assets/x.png)"
+                document.getElementById(`compArray,${cellID}`).style.backgroundImage="url(./assets/x.png)"
                 document.getElementById(`compArray,${cellID}`).style.backgroundSize="cover";
             }
         }
