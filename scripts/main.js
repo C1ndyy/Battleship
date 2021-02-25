@@ -470,6 +470,7 @@ myGridDiv.addEventListener("click", function(e){
 //Switches from start page layout to game page layout
 startButton.addEventListener("click", function(e){
     startButton.style.display="none";
+    myGridDiv.classList.add("no-click")
     showSecondPageElements();
     generateRandomShipLocations()
     render()
@@ -491,6 +492,7 @@ compGridDiv.addEventListener("click", function(e){
             if (checkWin(compArray)){
                 winnerPopUp.style.display = "block"
                 winnerPopUpMessage.innerHTML = "You Win!"
+                compGridDiv.classList.add("no-click");
             }
             myTurn = false;
             myTurnIndicatorOff()
@@ -503,6 +505,7 @@ compGridDiv.addEventListener("click", function(e){
                 if (checkWin(myArray)){
                     winnerPopUp.style.display = "block"
                     winnerPopUpMessage.innerHTML = "You lost against the computer!"
+                    compGridDiv.classList.add("no-click");
                 }
                 
                 setTimeout(function(){
@@ -560,7 +563,8 @@ winnerPopUp.addEventListener("click", function(e){
             }
         }
         init();
-        winnerPopUp.style.display="none"
+        winnerPopUp.style.display="none";
+        compGridDiv.classList.remove("no-click");
     }
 })
 
