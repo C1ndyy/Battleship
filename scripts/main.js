@@ -2,6 +2,7 @@
 let myArray = createEmptyArray();
 let compArray = createEmptyArray();
 let myTurn = true;
+let soundOn = false;
 
 const ships=[
     {name: "carrier", size: 5, color: "rgb(252, 186, 162)"},
@@ -13,8 +14,6 @@ const ships=[
 ];
 
 const gridColor="white"
-
-
 
 //--------------------------cached variables--------------------------//
 const body=document.querySelector("body");
@@ -31,7 +30,11 @@ const playerTurnIndicator = document.querySelector("#my-turn>p");
 const optionsMenu=document.getElementById("options");
 const winnerPopUp=document.getElementById("winner-pop-up");
 const winnerPopUpMessage=document.getElementById("winner-message");
+const soundButton=document.getElementById("sound");
 
+//--------------------------soundfx--------------------------//
+let missSound = new Audio('assets/miss.wav')
+let hitSound = new Audio('assets/hit.wav')
 //------------------------------Functions-----------------------------//
 //renders an empty 10x10 grid in the DOM
 function createEmptyGrid(id, parentDivElement){
@@ -140,11 +143,16 @@ function checkHit(array,x,y){
     //if empty (0) update game state array to miss (1)
     if (array[x][y] === 0){
         array[x][y] = 1;
+        if (soundOn == true && array == compArray) missSound.play();
         return false;
     }
     //if cell has ship (2) update game state array to hit (3)
     else if (array[x][y] === 2){
         array[x][y] = 3;
+        if (soundOn == true && array == compArray){
+            hitSound.pause();
+            hitSound.play();
+        } 
         return true;
     }
 }
@@ -160,6 +168,8 @@ function checkWin(array){
     return true;
 }
 
+//------------------------------AI Functions below---------------------------//
+let foundShips = 0
 //generate an AI Guess- Main function
 function generateAIGuess(){
     //target half sunk ships
@@ -249,12 +259,7 @@ function guessShipOrientation(x,y){
         }
     }
 }
-
-createEmptyGrid("myArray", myGridDiv); //my DOM Grid
-createEmptyGrid("compArray", compGridDiv) //comp DOM Grid
-createShips();
-
-console.log(compArray)
+//------------------------------AI Functions above---------------------------//
 
 //render 0=empty 1=miss 2=ship not hit 3=ship hit
 function render(){
@@ -290,6 +295,7 @@ function render(){
     }
 }
 
+//update CSS for turn indicator
 function myTurnIndicatorOn(){
     playerTurnIndicator.classList.add("turn-indicator-on-blue")
     playerTurnIndicator.classList.remove("turn-indicator-off")
@@ -299,6 +305,7 @@ function myTurnIndicatorOn(){
     myGridDiv.style.boxShadow=""
 }
 
+//update CSS for turn indicator
 function myTurnIndicatorOff(){
     compTurnIndicator.classList.add("turn-indicator-on-red")
     compTurnIndicator.classList.remove("turn-indicator-off")
@@ -308,6 +315,7 @@ function myTurnIndicatorOff(){
     compGridDiv.style.boxShadow=""
 }
 
+//use to unhide CSS elements on second page
 function showSecondPageElements(){
     body.classList.remove("page-1-layout");
     body.classList.add("page-2-layout");
@@ -317,6 +325,7 @@ function showSecondPageElements(){
     optionsMenu.style.display = "flex"
 }
 
+//ONLY USE TO RESTART SAME GAME -does not wipe player ship locations
 function init(){
     compArray = createEmptyArray();
     generateRandomShipLocations();
@@ -324,6 +333,11 @@ function init(){
     myTurn = true;
     myTurnIndicatorOn();
 }
+
+//init
+createEmptyGrid("myArray", myGridDiv); //my DOM Grid
+createEmptyGrid("compArray", compGridDiv) //comp DOM Grid
+createShips();
 
 //------------------------------Event Listeners-----------------------------//
 
@@ -494,9 +508,9 @@ compGridDiv.addEventListener("click", function(e){
                 setTimeout(function(){
                     myTurn = true
                     myTurnIndicatorOn()
-                },100)
+                },200)
 
-            }, 100);
+            }, 200);
         }
     }
 })
@@ -547,5 +561,17 @@ winnerPopUp.addEventListener("click", function(e){
         }
         init();
         winnerPopUp.style.display="none"
+    }
+})
+
+//toggle soundfx
+soundButton.addEventListener("click", function(e){
+    if (soundOn == false){
+        soundOn = true;
+        soundButton.innerHTML = "Turn Sound Off"
+    }
+    else{
+        soundOn = false;
+        soundButton.innerHTML = "Turn Sound On"
     }
 })
